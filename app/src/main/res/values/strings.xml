@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">AndroidProjectCollection</string>
+
+    <string name="title">Layout Exercise</string>
+    <string name="btn1">Button 1</string>
+    <string name="btn2">Button 2</string>
+    <string name="btn3">Button 3</string>
+
+    <string name="like_btn">L</string>
+    <string name="share_btn">S</string>
+
+
+    <string name="post1_name">Slomm</string>
+    <string name="post2_name">Jors</string>
+    <string name="post3_name">Natters</string>
+</resources>
