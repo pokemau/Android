@@ -1,16 +1,32 @@
 <resources>
     <string name="app_name">AndroidProjectCollection</string>
 
-    <string name="title">Layout Exercise</string>
-    <string name="btn1">Button 1</string>
-    <string name="btn2">Button 2</string>
-    <string name="btn3">Button 3</string>
+    <!--  MAIN BUTTONS  -->
+    <string name="btn1">Layout Exercise</string>
+    <string name="btn2">Button Exercise</string>
+    <string name="btn3">Button 2</string>
+    <string name="btn4">Button 3</string>
+    <!--  MAIN BUTTONS  -->
 
+
+    <!--    INSTAGRAM CLONE   -->
     <string name="like_btn">L</string>
     <string name="share_btn">S</string>
-
-
     <string name="post1_name">Slomm</string>
     <string name="post2_name">Jors</string>
     <string name="post3_name">Natters</string>
+    <!--    INSTAGRAM CLONE   -->
+
+
+    <!--    BUTTONS EXERCISE    -->
+    <string name="close_btn">Close</string>
+    <string name="toast_btn">Toast</string>
+    <string name="change_bg_btn">Change BG</string>
+    <string name="change_btn_bg_btn">Change Button BG</string>
+    <string name="disappear_btn">Disappear</string>
+
+    <string name="return_btn">Return</string>
+    <!--    BUTTONS EXERCISE    -->
+
+
 </resources>

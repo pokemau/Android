@@ -10,7 +10,7 @@
             android:id="@+id/btnLayoutExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title"
+            android:text="@string/btn1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -21,17 +21,17 @@
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn2"
+            android:text="@string/btn3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button2"
+            app:layout_constraintTop_toBottomOf="@+id/btnButtonExercise"
             android:layout_marginTop="44dp" />
 
     <Button
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn3"
+            android:text="@string/btn4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button3"
@@ -39,10 +39,10 @@
             app:layout_constraintHorizontal_bias="0.503" />
 
     <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnButtonExercise"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn1"
+            android:text="@string/btn2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnLayoutExercise"
