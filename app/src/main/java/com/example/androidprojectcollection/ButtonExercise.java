@@ -19,6 +19,10 @@ public class ButtonExercise extends AppCompatActivity {
     Button changeBtnBgBtn;
     Button disappearBtn;
 
+
+    int[] colors = {Color.RED, Color.GREEN, Color.BLUE};
+    int indexColor = 0;
+
     ConstraintLayout constraintLayout;
 
     @Override
@@ -57,7 +61,8 @@ public class ButtonExercise extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 constraintLayout = (ConstraintLayout) findViewById(R.id.LayoutbtnActivityConstraint);
-                constraintLayout.setBackgroundColor(Color.GREEN);
+                constraintLayout.setBackgroundColor(colors[indexColor]);
+                indexColor = (indexColor + 1) % colors.length;
             }
         });
 
@@ -65,7 +70,8 @@ public class ButtonExercise extends AppCompatActivity {
         changeBtnBgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeBtnBgBtn.setBackgroundColor(Color.RED);
+                changeBtnBgBtn.setBackgroundColor(colors[indexColor]);
+                indexColor = (indexColor + 1) % colors.length;
                 changeBtnBgBtn.setTextColor(Color.WHITE);
             }
         });

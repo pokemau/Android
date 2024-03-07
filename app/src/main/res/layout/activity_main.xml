@@ -18,7 +18,7 @@
             app:layout_constraintHorizontal_bias="0.497" />
 
     <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnCalculatorExer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn3"
@@ -34,7 +34,7 @@
             android:text="@string/btn4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button3"
+            app:layout_constraintTop_toBottomOf="@+id/btnCalculatorExer"
             android:layout_marginTop="44dp"
             app:layout_constraintHorizontal_bias="0.503" />
 
