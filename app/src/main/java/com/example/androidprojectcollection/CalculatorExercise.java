@@ -6,11 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
+
 
 public class CalculatorExercise extends AppCompatActivity {
 
@@ -25,11 +22,14 @@ public class CalculatorExercise extends AppCompatActivity {
     StringBuilder sb = new StringBuilder("");
 
     // for sequential answer vars
-    int l = 0;
+    int pointer = 0;
     char currOp;
     boolean isOperation = false;
     boolean hasOperation = false;
-    Stack<Double> nums_sequential = new Stack<>();
+
+    boolean isDecimal = false;
+    boolean hasDecimal = false;
+    Stack<Double> sequentialStack = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,33 @@ public class CalculatorExercise extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             setNumClickListener(buttons[i], (char)(i + '0'));
         }
-        setNumClickListener(decimal, '.');
+
+
+        decimal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (sb.length() == 0) { return; }
+                if (isOperation) { return; }
+                if (!Character.isDigit(sb.charAt(pointer))) { return; }
+
+                if (!isDecimal) {
+                    if (!hasDecimal) {
+                        sb.append('.');
+                        hasDecimal = true;
+                        isDecimal = true;
+                    }
+
+                } else {
+                    sb.setLength(sb.length() - 1);
+                    hasDecimal = !hasDecimal;
+                    isDecimal = false;
+                }
+
+
+                txtInput.setText(sb);
+            }
+        });
 
         setOperationClickListener(btnAdd, '+');
         setOperationClickListener(btnSubtract, '-');
@@ -76,45 +102,54 @@ public class CalculatorExercise extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                if (isOperation) { return; }
+
                 calculateString(sb.toString());
 
-                l = 0;
+                pointer = 0;
                 isOperation = false;
                 hasOperation = false;
-                nums_sequential.clear();
-                txtInput.setText("0");
+                hasDecimal = false;
+                isDecimal = false;
+                sequentialStack.clear();
+//                txtInput.setText("0");
                 sb.setLength(0);
             }
         });
     }
 
     private void calculateString(String str) {
+
         Stack<Double> nums = new Stack<>();
         Stack<Character> ops = new Stack<>();
 
-        double currNum = 0.0;
+        StringBuilder nb = new StringBuilder();
 
         for (int i = 0; i < str.length(); i++) {
-            char curr = str.charAt(i);
 
-            if (Character.isDigit(curr))
-                currNum = (currNum * 10) + (curr - '0');
-            else {
-                nums.push(currNum);
-                currNum = 0;
+            char c = str.charAt(i);
 
-                while (!ops.empty() && precedence(ops.peek()) >= precedence(curr)) {
+            if (Character.isDigit(c) || c == '.') {
+                nb.append(c);
+            } else {
+                nums.push(Double.parseDouble(nb.toString()));
+                nb.setLength(0);
+
+                while (!ops.empty() && precedence(ops.peek()) >= precedence(c)) {
                     char currOp = ops.pop();
                     double a = nums.pop();
                     double b = nums.pop();
 
                     nums.push(calculate(b, a, currOp));
                 }
-                ops.push(curr);
+                ops.push(c);
             }
         }
-        if (currNum != 0)
-            nums.push(currNum);
+
+        if (nb.length() != 0) {
+            nums.push(Double.parseDouble(nb.toString()));
+            nb.setLength(0);
+        }
 
         while(!ops.empty()) {
             char currOp = ops.pop();
@@ -132,29 +167,34 @@ public class CalculatorExercise extends AppCompatActivity {
 
         double top = nums.peek();
 
-        if (top % 1 == 0)
+        if (top % 1 == 0) {
             txtAns.setText((int) top + "");
-        else
+        }
+        else {
             txtAns.setText(top + "");
+        }
     }
 
 
     private void handleNumberClick(char num) {
         if (isOperation) { isOperation = false; }
 
+        isDecimal = false;
+
         if (sb.length() == 0 && num == '0') { return; }
 
         sb.append(num);
 
 
-        double n = Integer.parseInt(sb.substring(l, sb.length()));
+        double n = Double.parseDouble(sb.substring(pointer, sb.length()));
+
 
         if (hasOperation) {
-            double n1 = nums_sequential.pop();
-            double prevN = 0;
+            double n1 = sequentialStack.pop();
+            double prevN = 0.0;
 
-            if (sb.length() - l >= 2)
-                prevN = Double.parseDouble(sb.substring(l, sb.length()-1));
+            if (sb.length() - pointer >= 2)
+                prevN = Double.parseDouble(sb.substring(pointer, sb.length()-1));
 
             double newN = n-prevN;
 
@@ -174,23 +214,27 @@ public class CalculatorExercise extends AppCompatActivity {
                     break;
             }
 
-            nums_sequential.push(n1);
+            sequentialStack.push(n1);
 
-            double top = nums_sequential.peek();
+            double top = sequentialStack.peek();
 
             if (top % 1 == 0)
                 txtAns.setText((int) top + "");
-            else
-                txtAns.setText(top + "");
+            else {
+                String ans = String.format("%.2f", top);
+                txtAns.setText(ans);
+            }
 
         }
         txtInput.setText(sb);
     }
 
-
-
     private void handleOperationClick(char op) {
         if (sb.length() == 0) { return; }
+
+        if (isDecimal) { return; }
+
+        hasDecimal = false;
 
         if (isOperation) {
             sb.setCharAt(sb.length()-1, op);
@@ -200,14 +244,14 @@ public class CalculatorExercise extends AppCompatActivity {
             isOperation = true;
             currOp = op;
 
-            double n = Double.parseDouble(sb.substring(l, sb.length()-1));
+            double n = Double.parseDouble(sb.substring(pointer, sb.length()-1));
 
             if (!hasOperation) { hasOperation = true; }
 
-            l = sb.length();
+            pointer = sb.length();
 
-            if (nums_sequential.empty())
-                nums_sequential.push(n);
+            if (sequentialStack.empty())
+                sequentialStack.push(n);
         }
 
         txtInput.setText(sb);
@@ -253,8 +297,6 @@ public class CalculatorExercise extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(num);
-
                 handleNumberClick(num);
             }
         });
