@@ -15,6 +15,7 @@ import java.util.Stack;
 public class CalculatorExercise extends AppCompatActivity {
 
     Button num1, num2, num3, num4, num5, num6, num7, num8, num9, num0;
+    Button[] buttons = {num0, num1, num2, num3, num4, num5, num6, num7, num8, num9};
     Button btnAdd, btnSubtract, btnDivide, btnMultiply, btnEquals;
     TextView txtInput;
     TextView txtAns;
@@ -33,67 +34,37 @@ public class CalculatorExercise extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator_exercise);
 
+        // text views
         txtInput    = (TextView) findViewById(R.id.txtInput);
         txtAns      = (TextView) findViewById(R.id.textAnswer);
-        num0        = (Button) findViewById(R.id.btnZero);
-        num1        = (Button) findViewById(R.id.btnOne);
-        num2        = (Button) findViewById(R.id.btnTwo);
-        num3        = (Button) findViewById(R.id.btnThree);
-        num4        = (Button) findViewById(R.id.btnFour);
-        num5        = (Button) findViewById(R.id.btnFive);
-        num6        = (Button) findViewById(R.id.btnSix);
-        num7        = (Button) findViewById(R.id.btnSeven);
-        num8        = (Button) findViewById(R.id.btnEight);
-        num9        = (Button) findViewById(R.id.btnNine);
 
+        // number buttons
+        buttons[0]  = (Button) findViewById(R.id.btnZero);
+        buttons[1]  = (Button) findViewById(R.id.btnOne);
+        buttons[2]  = (Button) findViewById(R.id.btnTwo);
+        buttons[3]  = (Button) findViewById(R.id.btnThree);
+        buttons[4]  = (Button) findViewById(R.id.btnFour);
+        buttons[5]  = (Button) findViewById(R.id.btnFive);
+        buttons[6]  = (Button) findViewById(R.id.btnSix);
+        buttons[7]  = (Button) findViewById(R.id.btnSeven);
+        buttons[8]  = (Button) findViewById(R.id.btnEight);
+        buttons[9]  = (Button) findViewById(R.id.btnNine);
+
+        // operation buttons
         btnEquals   = (Button) findViewById(R.id.btnEquals);
         btnAdd      = (Button) findViewById(R.id.btnPlus);
         btnSubtract = (Button) findViewById(R.id.btnSubtract);
         btnDivide   = (Button) findViewById(R.id.btnDivide);
         btnMultiply = (Button) findViewById(R.id.btnMultiply);
 
-        num1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleNumberClick('1');
-            }
-        });
-        num2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleNumberClick('2');
-            }
-        });
+        for (int i = 0; i < 10; i++) {
+            setNumClickListener(buttons[i], (char)(i + '0'));
+        }
 
-
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleOperationClick('+');
-            }
-        });
-
-        btnSubtract.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleOperationClick('-');
-            }
-        });
-
-        btnMultiply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleOperationClick('*');
-            }
-        });
-
-        btnDivide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleOperationClick('/');
-            }
-        });
+        setOperationClickListener(btnAdd, '+');
+        setOperationClickListener(btnSubtract, '-');
+        setOperationClickListener(btnMultiply, '*');
+        setOperationClickListener(btnDivide, '/');
 
         btnEquals.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,17 +77,29 @@ public class CalculatorExercise extends AppCompatActivity {
                 hasOperation = false;
                 nums_sequential.clear();
                 txtInput.setText("0");
-//                txtAns.setText("0");
                 sb.setLength(0);
             }
         });
     }
 
+    private int calculate(int a, int b, char op) {
+        switch(op) {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                if (b == 0) return 0;
+                return a / b;
+        }
+        return 0;
+    }
+
     private void calculateString(String str) {
         Stack<Integer> nums = new Stack<>();
         Stack<Character> ops = new Stack<>();
-
-        List<Integer> opsOrder = new ArrayList<>();
 
         int res = 0;
         int currNum = 0;
@@ -129,29 +112,47 @@ public class CalculatorExercise extends AppCompatActivity {
             else {
                 nums.push(currNum);
                 currNum = 0;
+
+                while (!ops.empty() && precedence(ops.peek()) >= precedence(curr)) {
+                    char currOp = ops.pop();
+                    int a = nums.pop();
+                    int b = nums.pop();
+
+                    nums.push(calculate(b, a, currOp));
+                }
                 ops.push(curr);
             }
         }
         if (currNum != 0)
             nums.push(currNum);
 
+        while(!ops.empty()) {
+            char currOp = ops.pop();
+            int a = nums.pop();
+            int b = nums.pop();
+            nums.push(calculate(b, a, currOp));
+        }
 
         // if string is an invalid equation
-        if (    (nums.size() % 2 == 0 && ops.size() % 2 == 0) ||
-                (nums.size() == 1 && ops.size() == 1)) {
+        // [invalid number of operands or operator]
+        if ( (nums.size() % 2 == 0 && ops.size() % 2 == 0) ||
+             (nums.size()     == 1 && ops.size()     == 1) ) {
             return;
         }
 
-        txtAns.setText(res + "");
+        txtAns.setText(nums.peek()+"");
+    }
 
-        System.out.println("---------------------------");
-        System.out.println("---------------------------");
-        System.out.println("---------------------------");
-        System.out.println(Arrays.toString(nums.toArray()));
-        System.out.println(Arrays.toString(ops.toArray()));
-        System.out.println("---------------------------");
-        System.out.println("---------------------------");
-        System.out.println("---------------------------");
+    private int precedence(char op) {
+        switch(op) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+        }
+        return -1;
     }
 
     private void handleNumberClick(char num) {
@@ -193,6 +194,8 @@ public class CalculatorExercise extends AppCompatActivity {
         txtInput.setText(sb);
     }
 
+
+
     private void handleOperationClick(char op) {
         if (sb.length() == 0) { return; }
 
@@ -216,4 +219,25 @@ public class CalculatorExercise extends AppCompatActivity {
 
         txtInput.setText(sb);
     }
+
+    private void setOperationClickListener(Button btn, char op) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleOperationClick(op);
+            }
+        });
+    }
+
+    private void setNumClickListener(Button btn, char num) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println(num);
+
+                handleNumberClick(num);
+            }
+        });
+    }
 }
+
