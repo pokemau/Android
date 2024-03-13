@@ -88,21 +88,6 @@ public class CalculatorExercise extends AppCompatActivity {
         });
     }
 
-    private Double calculate(Double a, Double b, char op) {
-        switch(op) {
-            case '+':
-                return a + b;
-            case '-':
-                return a - b;
-            case '*':
-                return a * b;
-            case '/':
-                if (b == 0) return 0.0;
-                return a / b;
-        }
-        return 0.0;
-    }
-
     private void calculateString(String str) {
         Stack<Double> nums = new Stack<>();
         Stack<Character> ops = new Stack<>();
@@ -153,17 +138,6 @@ public class CalculatorExercise extends AppCompatActivity {
             txtAns.setText(top + "");
     }
 
-    private int precedence(char op) {
-        switch(op) {
-            case '+':
-            case '-':
-                return 1;
-            case '*':
-            case '/':
-                return 2;
-        }
-        return -1;
-    }
 
     private void handleNumberClick(char num) {
         if (isOperation) { isOperation = false; }
@@ -237,6 +211,33 @@ public class CalculatorExercise extends AppCompatActivity {
         }
 
         txtInput.setText(sb);
+    }
+
+    private int precedence(char op) {
+        switch(op) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+        }
+        return -1;
+    }
+
+    private Double calculate(Double a, Double b, char op) {
+        switch(op) {
+            case '+':
+                return a + b;
+            case '-':
+                return a - b;
+            case '*':
+                return a * b;
+            case '/':
+                if (b == 0) return 0.0;
+                return a / b;
+        }
+        return 0.0;
     }
 
     private void setOperationClickListener(Button btn, char op) {
