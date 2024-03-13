@@ -15,19 +15,21 @@ import java.util.Stack;
 public class CalculatorExercise extends AppCompatActivity {
 
     Button num1, num2, num3, num4, num5, num6, num7, num8, num9, num0;
+    Button decimal;
     Button[] buttons = {num0, num1, num2, num3, num4, num5, num6, num7, num8, num9};
+
     Button btnAdd, btnSubtract, btnDivide, btnMultiply, btnEquals;
     TextView txtInput;
     TextView txtAns;
 
     StringBuilder sb = new StringBuilder("");
-    Stack<Integer> nums_sequential = new Stack<>();
 
     // for sequential answer vars
     int l = 0;
     char currOp;
     boolean isOperation = false;
     boolean hasOperation = false;
+    Stack<Double> nums_sequential = new Stack<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class CalculatorExercise extends AppCompatActivity {
         buttons[8]  = (Button) findViewById(R.id.btnEight);
         buttons[9]  = (Button) findViewById(R.id.btnNine);
 
+        // decimal
+        decimal     = (Button) findViewById(R.id.btnDecimal);
+
         // operation buttons
         btnEquals   = (Button) findViewById(R.id.btnEquals);
         btnAdd      = (Button) findViewById(R.id.btnPlus);
@@ -60,6 +65,7 @@ public class CalculatorExercise extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             setNumClickListener(buttons[i], (char)(i + '0'));
         }
+        setNumClickListener(decimal, '.');
 
         setOperationClickListener(btnAdd, '+');
         setOperationClickListener(btnSubtract, '-');
@@ -82,7 +88,7 @@ public class CalculatorExercise extends AppCompatActivity {
         });
     }
 
-    private int calculate(int a, int b, char op) {
+    private Double calculate(Double a, Double b, char op) {
         switch(op) {
             case '+':
                 return a + b;
@@ -91,18 +97,17 @@ public class CalculatorExercise extends AppCompatActivity {
             case '*':
                 return a * b;
             case '/':
-                if (b == 0) return 0;
+                if (b == 0) return 0.0;
                 return a / b;
         }
-        return 0;
+        return 0.0;
     }
 
     private void calculateString(String str) {
-        Stack<Integer> nums = new Stack<>();
+        Stack<Double> nums = new Stack<>();
         Stack<Character> ops = new Stack<>();
 
-        int res = 0;
-        int currNum = 0;
+        double currNum = 0.0;
 
         for (int i = 0; i < str.length(); i++) {
             char curr = str.charAt(i);
@@ -115,8 +120,8 @@ public class CalculatorExercise extends AppCompatActivity {
 
                 while (!ops.empty() && precedence(ops.peek()) >= precedence(curr)) {
                     char currOp = ops.pop();
-                    int a = nums.pop();
-                    int b = nums.pop();
+                    double a = nums.pop();
+                    double b = nums.pop();
 
                     nums.push(calculate(b, a, currOp));
                 }
@@ -128,8 +133,8 @@ public class CalculatorExercise extends AppCompatActivity {
 
         while(!ops.empty()) {
             char currOp = ops.pop();
-            int a = nums.pop();
-            int b = nums.pop();
+            double a = nums.pop();
+            double b = nums.pop();
             nums.push(calculate(b, a, currOp));
         }
 
@@ -140,7 +145,12 @@ public class CalculatorExercise extends AppCompatActivity {
             return;
         }
 
-        txtAns.setText(nums.peek()+"");
+        double top = nums.peek();
+
+        if (top % 1 == 0)
+            txtAns.setText((int) top + "");
+        else
+            txtAns.setText(top + "");
     }
 
     private int precedence(char op) {
@@ -158,18 +168,21 @@ public class CalculatorExercise extends AppCompatActivity {
     private void handleNumberClick(char num) {
         if (isOperation) { isOperation = false; }
 
+        if (sb.length() == 0 && num == '0') { return; }
+
         sb.append(num);
 
-        int n = Integer.parseInt(sb.substring(l, sb.length()));
+
+        double n = Integer.parseInt(sb.substring(l, sb.length()));
 
         if (hasOperation) {
-            int n1 = nums_sequential.pop();
-            int prevN = 0;
+            double n1 = nums_sequential.pop();
+            double prevN = 0;
 
             if (sb.length() - l >= 2)
-                prevN = Integer.parseInt(sb.substring(l, sb.length()-1));
+                prevN = Double.parseDouble(sb.substring(l, sb.length()-1));
 
-            int newN = n-prevN;
+            double newN = n-prevN;
 
             switch (currOp) {
                 case '+':
@@ -182,14 +195,20 @@ public class CalculatorExercise extends AppCompatActivity {
                     n1 *= newN;
                     break;
                 case '/':
-                    if (newN == 0) { break; }
+                    if (newN == 0.0) { break; }
                     n1 /= newN;
                     break;
             }
 
             nums_sequential.push(n1);
 
-            txtAns.setText(nums_sequential.peek() + "");
+            double top = nums_sequential.peek();
+
+            if (top % 1 == 0)
+                txtAns.setText((int) top + "");
+            else
+                txtAns.setText(top + "");
+
         }
         txtInput.setText(sb);
     }
@@ -207,7 +226,7 @@ public class CalculatorExercise extends AppCompatActivity {
             isOperation = true;
             currOp = op;
 
-            int n = Integer.parseInt(sb.substring(l, sb.length()-1));
+            double n = Double.parseDouble(sb.substring(l, sb.length()-1));
 
             if (!hasOperation) { hasOperation = true; }
 
