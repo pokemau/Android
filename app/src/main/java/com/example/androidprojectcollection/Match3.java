@@ -11,17 +11,15 @@ import java.util.Random;
 
 public class Match3 extends AppCompatActivity {
 
-//    Button t00, t01, t02, t03, t04;
-//    Button t10, t11, t12, t13, t14;
-//    Button t20, t21, t22, t23, t24;
-//    Button t30, t31, t32, t33, t34;
-//    Button t40, t41, t42, t43, t44;
 
     int[] colors = {Color.YELLOW, Color.RED, Color.BLUE, Color.GREEN};
 
     int[][] buttonColors = new int[5][5];
 
     Button[][] buttons = new Button[5][5];
+
+
+    Button restartBtn;
 
 
 
@@ -144,6 +142,15 @@ public class Match3 extends AppCompatActivity {
         buttons[4][3] = (Button) findViewById(R.id.tile43);
         buttons[4][4] = (Button) findViewById(R.id.tile44);
 
+        restartBtn = (Button) findViewById(R.id.btnRestartMatch3);
+
+        restartBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initButtons();
+            }
+        });
+
         generateRandomColors();
         setButtonColors();
 
@@ -153,5 +160,6 @@ public class Match3 extends AppCompatActivity {
                 setClickListener(buttons[row][col], row, col);
             }
         }
+
     }
 }
