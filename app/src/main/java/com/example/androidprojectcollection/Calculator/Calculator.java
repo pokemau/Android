@@ -210,6 +210,8 @@ public class Calculator {
 
             char c = sb.charAt(i);
 
+//            nb = "23"
+
             if (Character.isDigit(c) || c == '.') {
                 nb.append(c);
             } else {
