@@ -41,18 +41,18 @@ public class Match3 extends AppCompatActivity {
 
 
     void swapColors(MatchBtn a, MatchBtn b) {
-        int prevB1Color = buttonColors[b1.row][b1.col];
-        int prevB2Color = buttonColors[b2.row][b2.col];
+        int prevB1Color = buttonColors[a.row][a.col];
+        int prevB2Color = buttonColors[b.row][b.col];
         int temp = prevB1Color;
 
         prevB1Color = prevB2Color;
         prevB2Color = temp;
 
-        buttonColors[b2.row][b2.col] = prevB2Color;
-        buttonColors[b1.row][b1.col] = prevB1Color;
+        buttonColors[b.row][b.col] = prevB2Color;
+        buttonColors[a.row][a.col] = prevB1Color;
 
-        b1.btn.setBackgroundColor(buttonColors[b1.row][b2.col]);
-        b2.btn.setBackgroundColor(buttonColors[b2.row][b2.col]);
+        b1.btn.setBackgroundColor(buttonColors[a.row][a.col]);
+        b2.btn.setBackgroundColor(buttonColors[b.row][b.col]);
     }
 
     void setClickListener(Button btn, int row, int col) {
@@ -64,40 +64,15 @@ public class Match3 extends AppCompatActivity {
                     b1 = new MatchBtn(btn, row, col);
                     isFirst = false;
                 } else {
-                    // check adjacent
-                    // check top
                     b2 = new MatchBtn(btn, row, col);
 
-                    if (b1.col == col && b1.row-1 == row ) {
+                    if (b1.col == col && b1.row-1 == row ||
+                        b1.col == col && b1.row+1 == row ||
+                        b1.row == row && b1.col-1 == col ||
+                        b1.row == row && b1.col+1 == col) {
 
                         swapColors(b1, b2);
-
-//                        int prevB1Color = buttonColors[b1.row][b1.col];
-//                        int prevB2Color = buttonColors[b2.row][b2.col];
-//                        int temp = prevB1Color;
-//
-//                        prevB1Color = prevB2Color;
-//                        prevB2Color = temp;
-//
-//                        buttonColors[b2.row][b2.col] = prevB2Color;
-//                        buttonColors[b1.row][b1.col] = prevB1Color;
-//
-//                        b1.btn.setBackgroundColor(buttonColors[b1.row][b2.col]);
-//                        b2.btn.setBackgroundColor(buttonColors[b2.row][b2.col]);
                     }
-//                    // check bot
-                    if (b1.col == col && b1.row+1 == row) {
-                        swapColors(b1, b2);
-                    }
-                    // check left
-                    if (b1.row == row && b1.col-1 == col) {
-                        swapColors(b1, b2);
-                    }
-//                    // check right
-//                    if (b1.row == row && b1.col+1 == col) {
-//                        b1.btn.setBackgroundColor(buttonColors[row][col]);
-//                    }
-
                     isFirst = true;
                 }
             }
