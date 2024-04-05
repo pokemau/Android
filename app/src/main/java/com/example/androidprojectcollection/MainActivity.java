@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.androidprojectcollection.Calculator.CalculatorExercise;
+import com.example.androidprojectcollection.Match3.Match3Exercise;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(
-                        MainActivity.this, Match3.class
+                        MainActivity.this, Match3Exercise.class
                 );
                 startActivity(intent1);
             }

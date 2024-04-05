@@ -12,7 +12,7 @@
             android:theme="@style/Theme.AndroidProjectCollection"
             tools:targetApi="31">
         <activity
-                android:name=".Match3"
+                android:name=".Match3.Match3Exercise"
                 android:exported="false" />
         <activity
                 android:name=".Calculator.CalculatorExercise"
