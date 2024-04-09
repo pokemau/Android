@@ -18,7 +18,6 @@ public class Match3Exercise extends AppCompatActivity {
     Button restartBtn;
     int score = 0;
 
-
     MatchBtn[][] buttons = new MatchBtn[5][5];
     int[] colors = {Color.YELLOW, Color.RED, Color.BLUE, Color.GREEN};
 
@@ -80,8 +79,6 @@ public class Match3Exercise extends AppCompatActivity {
                     }
                     isFirst = true;
                 }
-
-                printButtons();
             }
         });
 
@@ -93,71 +90,18 @@ public class Match3Exercise extends AppCompatActivity {
     }
 
     void checkWin(MatchBtn a) {
-//        String hexColor = String.format("#%06X", (0xFFFFFF & a.color));
-//        System.out.println(hexColor + "(" + a.col + ", " + a.row + ")");
-//        System.out.println("CHECKING COLOR: " + hexColor);
-
-        ArrayList<MatchBtn> verticalRes = checkVertical(a);
-        if (verticalRes.size() < 3) {
-            ArrayList<MatchBtn> horizontalRes = checkHorizontal(a);
-            if (horizontalRes.size() == 3) {
+        int verticalMatchRes = checkVerticalMatch(a);
+        if (verticalMatchRes == 3) {
+            setScore();
+        } else {
+            int horizontalMatchRes = checkHorizontalMatch(a);
+            if (horizontalMatchRes == 3) {
                 setScore();
             }
-        } else {
-            setScore();
         }
     }
 
-    ArrayList<MatchBtn> checkHorizontal(MatchBtn a) {
-        int count = 1;
-        int col = a.col-1;
-
-        ArrayList<MatchBtn> match = new ArrayList<>();
-
-        // check left
-        while (col >= 0) {
-            if (count == 3) { break; }
-            MatchBtn curr = buttons[a.row][col];
-            if (a.color == Color.BLACK) {
-                col--;
-                continue;
-            }
-
-            if (curr.color == a.color) {
-                match.add(curr);
-                count++;
-            } else break;
-            col--;
-        }
-        // check right
-        col = a.col+1;
-        while (col < 5) {
-            if (count == 3) { break ;}
-            MatchBtn curr = buttons[a.row][col];
-            if (a.color == Color.BLACK) {
-                col++;
-                continue;
-            }
-            if (curr.color == a.color) {
-                match.add(curr);
-                count++;
-            } else break;
-            col++;
-        }
-
-        if (count == 3) {
-            match.add(a);
-            for (MatchBtn b : match) {
-                int color = generateReplacementColor();
-                b.setColor(color);
-                checkWin(a);
-            }
-        }
-
-        return match;
-    }
-
-    ArrayList<MatchBtn> checkVertical(MatchBtn a) {
+    int checkVerticalMatch(MatchBtn a) {
         int count = 1;
         int row = a.row-1;
 
@@ -197,21 +141,80 @@ public class Match3Exercise extends AppCompatActivity {
         if (count == 3) {
             match.add(a);
             for (MatchBtn b : match) {
-                int color = generateReplacementColor();
-                b.setColor(color);
-                checkWin(a);
+                int currColor = b.color;
+                while (true) {
+                    int color = generateReplacementColor();
+                    if (color != currColor) {
+                        b.setColor(color);
+                        break;
+                    }
+                }
+            }
+
+            for (MatchBtn b : match) {
+                checkWin(b);
+            }
+        }
+        return count;
+    }
+
+    int checkHorizontalMatch(MatchBtn a) {
+        int count = 1;
+        int col = a.col-1;
+
+        ArrayList<MatchBtn> match = new ArrayList<>();
+
+        // check left
+        while (col >= 0) {
+            if (count == 3) { break; }
+            MatchBtn curr = buttons[a.row][col];
+            if (a.color == Color.BLACK) {
+                col--;
+                continue;
+            }
+
+            if (curr.color == a.color) {
+                match.add(curr);
+                count++;
+            } else break;
+            col--;
+        }
+        // check right
+        col = a.col+1;
+        while (col < 5) {
+            if (count == 3) { break ;}
+            MatchBtn curr = buttons[a.row][col];
+            if (a.color == Color.BLACK) {
+                col++;
+                continue;
+            }
+            if (curr.color == a.color) {
+                match.add(curr);
+                count++;
+            } else break;
+            col++;
+        }
+
+        if (count == 3) {
+            match.add(a);
+            for (MatchBtn b : match) {
+                int currColor = b.color;
+                while (true) {
+                    int color = generateReplacementColor();
+                    if (color != currColor) {
+                        b.setColor(color);
+                        break;
+                    }
+                }
+            }
+
+            for (MatchBtn b : match) {
+                checkWin(b);
             }
         }
 
-        return match;
+        return count;
     }
-
-    void setBlackColor(ArrayList<MatchBtn> match) {
-        for (MatchBtn a : match) {
-            a.setColor(Color.BLACK);
-        }
-    }
-
 
     void generateRandomColors() {
         Random r = new Random();
@@ -236,37 +239,10 @@ public class Match3Exercise extends AppCompatActivity {
                         } else break;
                     }
                 }
-                buttons[row][col].color = curr;
+                buttons[row][col].setColor(curr);
             }
         }
     }
-
-    String getColorName(int colorVal) {
-        if (colorVal == -16776961) { return "B"; }
-        if (colorVal == -65536) { return "R"; }
-        if (colorVal == -256) { return "Y"; }
-        if (colorVal == -16711936) { return "G"; }
-        return "_";
-    }
-    
-    void printButtons() {
-        // red      = #FF0000
-        // green    = #00FF00
-        // yellow   = #FFFF00
-        // blue     = #0000FF
-
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 5; col++) {
-                MatchBtn curr = buttons[row][col];
-                String hexColor = String.format("#%06X", (0xFFFFFF & curr.color));
-
-
-                System.out.print("("+curr.row+","+curr.col+")"+"-"+""+ getColorName(curr.color)+ "\t");
-            }
-            System.out.println();
-        }
-    }
-
     void setButtonColors() {
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 5; col++) {
