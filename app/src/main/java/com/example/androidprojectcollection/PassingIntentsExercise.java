@@ -89,6 +89,9 @@ public class PassingIntentsExercise extends AppCompatActivity {
         i.putExtra("motherName_key", motherName);
         i.putExtra("fatherName_key", fatherName);
 
+
+        clearInputs();
+
         startActivity(i);
     }
 
