@@ -70,6 +70,12 @@ public class PassingIntentsExercise extends AppCompatActivity {
         String motherName = EMothersName.getText().toString();
         String fatherName = EFathersName.getText().toString();
 
+        if (fName.isEmpty() || lName.isEmpty() ||
+                bDate.isEmpty() || phoneNum.isEmpty() ||
+                emailAdd.isEmpty() || strand.isEmpty() ||
+                address.isEmpty() || highSchool.isEmpty() ||
+                motherName.isEmpty() || fatherName.isEmpty()) { return; }
+
         Intent i = new Intent(PassingIntentsExercise.this, PassingIntentsExercise2.class);
         i.putExtra("fname_key", fName);
         i.putExtra("lname_key", lName);

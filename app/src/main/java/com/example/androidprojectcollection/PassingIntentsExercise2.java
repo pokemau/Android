@@ -56,4 +56,5 @@ public class PassingIntentsExercise2 extends AppCompatActivity {
             }
         });
     }
+
 }
