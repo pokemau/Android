@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:title="Change"
+            android:id="@+id/mItemChange" >
+        <menu >
+            <item
+                    android:title="BG Color to Yellow"
+                    android:id="@+id/mItemBGToYellow" />
+            <item
+                    android:title="Change Button Size"
+                    android:id="@+id/mItemChangeSize" />
+            <item
+                    android:title="Red text color"
+                    android:id="@+id/mItemTxtToRed" />
+            <item
+                    android:title="Font weight to BOLD"
+                    android:id="@+id/mItemFontToBold" />
+            <item
+                    android:title="Change font size"
+                    android:id="@+id/mItemChangeFontSize" />
+        </menu>
+    </item>
+    <item
+            android:title="Reset"
+            android:id="@+id/mItemReset" />
+    <item
+            android:title="Exit"
+            android:id="@+id/mItemExit" />
+</menu>

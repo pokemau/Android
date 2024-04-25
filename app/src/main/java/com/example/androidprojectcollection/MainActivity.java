@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button calculatorExerBtn;
     Button btnMatch3;
     Button btnIntentsExer;
+    Button menuExer;
 
 
     @Override
@@ -85,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent1 = new Intent(
                         MainActivity.this, PassingIntentsExercise.class
+                );
+                startActivity(intent1);
+            }
+        });
+
+        menuExer = (Button) findViewById(R.id.btnMenus);
+        menuExer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(
+                        MainActivity.this, MenuExcercise.class
                 );
                 startActivity(intent1);
             }
