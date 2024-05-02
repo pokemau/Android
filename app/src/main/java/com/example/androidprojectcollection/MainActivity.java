@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.androidprojectcollection.Calculator.CalculatorExercise;
 import com.example.androidprojectcollection.Match3.Match3Exercise;
@@ -18,21 +19,13 @@ public class MainActivity extends AppCompatActivity {
     Button btnMatch3;
     Button btnIntentsExer;
     Button menuExer;
+    Button btnOpeningMaps;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /*
-        Close
-        Toast
-        Change BG
-        Change Button BG
-        Disappear
-         */
-
 
         layoutExerBtn = (Button) findViewById(R.id.btnLayoutExercise);
         layoutExerBtn.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +90,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent1 = new Intent(
                         MainActivity.this, MenuExcercise.class
+                );
+                startActivity(intent1);
+            }
+        });
+
+        btnOpeningMaps = (Button) findViewById(R.id.btnOpeningMaps);
+        btnOpeningMaps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(
+                        MainActivity.this, MapsExercise.class
                 );
                 startActivity(intent1);
             }
